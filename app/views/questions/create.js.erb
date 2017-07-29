@@ -1,0 +1,8 @@
+<%if @question.errors.any?%>
+noty({text: "<%=@question.errors.full_messages.first%>",type: 'error',timeout: 1000})
+<%else%>
+noty({text: 'question successfully asked!!', type: 'success', timeout: 1000});
+console.log("here")
+$('#allQuestions').prepend("<%= escape_javascript (render 'home/question', question: @question)%>");
+$('#question_content').val("");
+<%end%>

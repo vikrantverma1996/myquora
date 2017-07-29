@@ -1,0 +1,2 @@
+module UpvoteqsHelper
+end

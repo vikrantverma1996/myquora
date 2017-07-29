@@ -1,0 +1,17 @@
+console.log("downvote_<%=@comment.id%>")
+$("#upcount_comment_<%=@comment.id%>").text("<%= @comment.upvotecs.count %>")
+$("#downcount_comment_<%=@comment.id%>").text("<%= @comment.downvotecs.count %>")
+<%if @downvotec%>
+noty({text: "comment's downvote removed successfully!!", type: 'alert', timeout: 1000});
+$("#downvote_comment_<%=@comment.id%>").removeClass('downvoted');
+$("#downvote_comment_<%=@comment.id%>").addClass('notdownvoted');
+
+<%else%>
+$("#upvote_comment_<%=@comment.id%>").removeClass('upvoted');
+$("#upvote_comment_<%=@comment.id%>").addClass('notupvoted');
+
+$("#downvote_comment_<%=@comment.id%>").removeClass('notdownvoted');
+$("#downvote_comment_<%=@comment.id%>").addClass('downvoted');
+
+noty({text: 'comment downvoted successfully!!', type: 'success', timeout: 1000});
+<%end%>

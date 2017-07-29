@@ -1,0 +1,24 @@
+<main class="users">
+<%users=User.all%>
+<h2><%=users.length%> users are available on quora<br><br></h2>
+<% users.each do |user|%>
+	<div class="user_template">
+	<div class="leftPart">
+	<span class="left">
+	<% if user.profile_picture %>
+			<img src="/uploads/<%= user.profile_picture %>" class="profile_image" >
+		<%else%>
+			<img src="/uploads/twitter-default-no-profile-pic.jpg" class="profile_image" >
+		<% end %>
+		</span>
+		<span class="right">
+		<h3><%= link_to "#{user.email}",url_for(controller:'home',action: 'profile',user: user)%></h3>
+		</span>
+	</div>
+	<div class="rightPart">
+	<%=link_to user.followed(user.id,current_user.id), url_for(controller: 'home', action: 'follow',followee_id: user.id),remote: true,method: :post,id: "follow_#{user.id}"%>
+	 <div class="follow"> followers: <span id="followers_<%=user.id%>"><%=user.followers.length%></span> followings: <span id="followings_<%=user.id%>"><%=user.followings.length%></span></div><br>
+	 </div>
+	 </div>
+<%end%>
+</main>

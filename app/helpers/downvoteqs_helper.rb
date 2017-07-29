@@ -1,0 +1,2 @@
+module DownvoteqsHelper
+end

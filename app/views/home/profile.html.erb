@@ -1,0 +1,59 @@
+<main class="profile">
+<div class="flex">
+	<div class="left">
+		<% if @user.profile_picture %>
+			<img src="/uploads/<%= @user.profile_picture %>" class="profile_image" >
+		<%else%>
+			<img src="/uploads/twitter-default-no-profile-pic.jpg" class="profile_image" >
+		<% end %>
+		<% if @user == current_user%>
+		<%= form_tag url_for(controller: :home, action: :profile_picture), multipart: true do %>
+
+		<%= file_field_tag :image %>
+		<br>
+		<%= submit_tag %>
+
+		<% end %>
+		<%end%>
+	</div>
+	<div class="right">
+	<h2> <%= @user.firstName%> <%= @user.lastName%> </h2>
+	</div>
+	
+</div>
+<% a = @user.answers.order(created_at: :desc)%>
+<%if a.length == 0%>
+<div class="allAnswers">
+<h3>U haven't answered any question yet!!</h3>
+</div>
+<%else%>
+<div class="allAnswers">
+	<h3><span><%=a.length%> question answered by 
+	<%if current_user == @user%>
+	you
+	<%else%>
+	<%=@user.firstName%>
+	<%end%>
+	 </span></h3>
+	<% a.each do |answer|%>
+	<div class="answerShow">
+		<div class="user">
+		<div class="leftpic">
+			<% if answer.user.profile_picture %>
+				<img src="/uploads/<%= answer.user.profile_picture %>" class="profile_image" >
+			<%else%>
+				<img src="/uploads/twitter-default-no-profile-pic.jpg" class="profile_image" >
+			<% end %>
+		</div>
+		<div class = "right">
+		answered by <%=answer.user.firstName%> <%=answer.user.lastName%>
+		on <%=answer.created_at.strftime("%b %d,%y")%><br>
+		</div>
+		</div>
+		<h2><%=answer.question.content%></h2><br>
+		<%= answer.content%><br>
+	</div>
+	<%end%>
+</div>
+	<%end%>
+</main>

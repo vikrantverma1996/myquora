@@ -1,0 +1,17 @@
+console.log("<%=@upvoteq%>")
+$("#upcount_question_<%=@question.id%>").text("<%= @question.upvoteqs.count %>")
+$("#downcount_question_<%=@question.id%>").text("<%= @question.downvoteqs.count %>")
+
+<%if @upvoteq%>
+$("#upvote_question_<%=@question.id%>").removeClass('upvoted');
+$("#upvote_question_<%=@question.id%>").addClass('notupvoted');
+noty({text: "question's upvote removed successfully!!", type: 'alert', timeout: 1000});
+<%else%>
+$("#upvote_question_<%=@question.id%>").removeClass('notupvoted');
+$("#upvote_question_<%=@question.id%>").addClass('upvoted');
+
+$("#downvote_question_<%=@question.id%>").removeClass('downvoted');
+$("#downvote_question_<%=@question.id%>").addClass('notdownvoted');
+
+noty({text: 'question upvoted successfully!!', type: 'success', timeout: 1000});
+<%end%>

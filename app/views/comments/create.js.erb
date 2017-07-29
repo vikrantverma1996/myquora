@@ -1,0 +1,8 @@
+<%if @comment.errors.any?%>
+noty({text: "<%=@comment.errors.full_messages.first%>",type: 'error', timeout: 1000});
+<%else%>
+console.log("here")
+$('#allComments_<%=@comment.answer.id%>').prepend("<%= escape_javascript (render 'home/comment', comment: @comment)%>");
+$('#comment_content_<%=@comment.answer.id%>').val("");
+noty({text: 'answer has been successfully commented!!', type: 'success', timeout: 1000});
+<%end%>

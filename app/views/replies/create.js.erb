@@ -1,0 +1,8 @@
+<%if @reply.errors.any?%>
+noty({text: "<%=@reply.errors.full_messages.first%>",type: 'error', timeout: 1000});
+<%else%>
+console.log("here")
+$('#allReplies_<%=@reply.comment.id%>').prepend("<%= escape_javascript (render 'home/reply', reply: @reply)%>");
+$('#reply_content_<%=@reply.comment.id%>').val("");
+noty({text: 'comment has been successfully replied!!', type: 'success', timeout: 1000});
+<%end%>

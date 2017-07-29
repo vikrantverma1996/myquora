@@ -1,0 +1,80 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+ 
+ main#login{
+ 	margin-top:4px;
+ 	margin-left:20%;
+ 	width: 625px;
+    height:550px;
+    padding: 0.5% 5%;
+ 	display: flex;
+    overflow-y: auto;
+ 	flex-direction: column;
+ 	background-color: white;
+ 	align-items: center;
+ 	vertical-align: middle;
+ 	div.loginLogo{
+        img {
+        	height: 82px;	
+        	weight: 224px;
+        }
+    }
+    h3{
+    	color: #b29999;
+    }
+    div.field{
+    	label{
+    	color:#333;
+    	font-size: 13px;
+    	}
+    	input{
+    		width:262px;
+    		height:32px;
+    	}
+        input#user_remember_me{
+            width:13px;
+            height:13px;
+        }
+    	input#user_firstName{
+    		width:262px;
+    		height:32px;
+    	}
+    	input#user_lastName{
+    		width:262px;
+    		height:32px;
+    	}
+    	input#user_password{
+    		width:262px;
+    		height:32px;
+    	}
+    	input#user_email{
+    		width:262px;
+    		height:32px;
+    	}
+    }
+    div.actions{
+    	input{
+    		background-color:#3e78ad;
+    		width:65px;
+    		height:30px;
+    		border-radius:4px;
+    		font-size:15px;
+    		padding:4px 7px;
+    		border: 1px solid #234462;
+    		color:white;
+    	}
+    }
+ }

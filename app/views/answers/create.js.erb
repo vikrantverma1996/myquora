@@ -1,0 +1,7 @@
+<%if @answer.errors.any?%>
+noty({text: "<%=@answer.errors.full_messages.first%>",type: 'error', timeout: 1000});
+<%else%>
+$('#allAnswers_<%=@answer.question.id%>').prepend("<%= escape_javascript (render 'home/answer', question: @answer.question.id, answer: @answer ) %>");
+$('#answer_content_<%=@answer.question.id%>').val("");
+	noty({text: 'question successfully answered!!', type: 'success', timeout: 1000});
+<%end%>

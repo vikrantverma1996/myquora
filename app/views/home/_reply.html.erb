@@ -1,0 +1,53 @@
+	<div class="replyShow">
+		<div class="replyHeader">
+			<div class="user">
+				<div class="left">
+					<% if reply.user.profile_picture %>
+						<img src="/uploads/<%= reply.user.profile_picture %>" class="profile_image" >
+					<%else%>
+						<img src="/uploads/twitter-default-no-profile-pic.jpg" class="profile_image" >
+					<% end %>
+				</div>
+				<div class = "right">
+					replyed by <%=reply.user.firstName%> <%=reply.user.lastName%>
+					on <%=reply.created_at.strftime("%b %d,%y")%>
+				</div>
+			</div>
+
+			<%if current_user %> 
+					<%if reply.user == current_user || User.posts[current_user.post]>=2 %> 
+						<div class="allbuttonthings">
+							<span id = "button_reply_<%=reply.id%>" style="cursor:pointer"><h1>...</h1></span>	
+							<div class="dropDown" id="drop_reply_<%=reply.id%>" >
+									<ol>
+									 <li><%=link_to "edit",edit_reply_path(id: reply.id),method: :get%></li>
+									 <li><%= link_to "delete",reply_path(id: reply.id),method: :delete,data: {confirm:"Are 		you sure?"}%></li>
+									 </ol>
+							</div>
+						</div>
+					<%end%>
+				<%end%>
+		</div>
+			<script type="text/javascript">
+			function dropDown(){
+				drop = document.getElementById("drop_reply_<%=reply.id%>");
+				console.log(drop.style.display)
+				if (drop.style.display == 'none'|| drop.style.display == ''){
+					drop.style.display = 'block'
+				}
+				else{
+					drop.style.display = 'none'
+				}
+			
+			}
+			button = document.getElementById("button_reply_<%=reply.id%>");
+			button.addEventListener('click',dropDown);
+			</script>
+		<%=reply.content%> 
+		<br><br>
+<% if current_user != nil%>
+		<%= link_to 'Upvote', url_for(controller: 'upvoters', action: 'upvoteToggleReply', reply: reply.id), method: :post,id: "upvote_reply_#{reply.id}", remote: true, class: reply.classStringReply(current_user.id)%>   <span id="upcount_reply_<%=reply.id%>"><%= reply.upvoters.count %></span>
+
+		<%= link_to 'Downvote', url_for(controller: 'downvoters', action: 'downvoteToggleReply', reply: reply.id), method: :post,id: "downvote_reply_#{reply.id}",remote: true, class: reply.classStringReplyDownvote(current_user.id) %>   <span id="downcount_reply_<%=reply.id%>"><%= reply.downvoters.count %></span>
+<%end%>	
+</div>

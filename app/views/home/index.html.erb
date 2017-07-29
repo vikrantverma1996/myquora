@@ -1,0 +1,30 @@
+<main>
+<section>
+<% if current_user != nil%>
+	<div id="createQuestion">
+	<%= form_for @question ,remote: true do |f|%>
+	<%= f.label :Ask_question %> <br>
+	<%= f.text_area :content%>  <br>
+	<%= f.submit  value:"Ask question", id:  'create-question-submit'%>
+	<%end%>
+	</div>
+	<% if @question.errors.any? %>
+        		<% @question.errors.full_messages.each do |message| %>
+   				<script type="text/javascript">
+				noty({text: '<%= message %>', type: 'error'});
+				</script>
+     		<% end %>
+ 	<% end %>
+<%end%>
+ 	<div id="allQuestions">
+	<%  @question_feed.each do |question| %><br>
+			<%=render('question',question: question)%>
+ 	<%end%>
+
+ 	</div>
+
+</section>
+
+</main>
+
+

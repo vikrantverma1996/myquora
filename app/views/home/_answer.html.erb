@@ -1,0 +1,74 @@
+	<div class="answerShow">
+		<div class="answerHeader">
+			<div class="user">
+				<div class="left">
+					<% if answer.user.profile_picture %>
+						<img src="/uploads/<%= answer.user.profile_picture %>" class="profile_image" >
+					<%else%>
+						<img src="/uploads/twitter-default-no-profile-pic.jpg" class="profile_image" >
+					<% end %>
+				</div>
+				<div class = "right">
+					answered by <%=answer.user.firstName%> <%=answer.user.lastName%>
+					on <%=answer.created_at.strftime("%b %d,%y")%>
+				</div>
+			</div>
+
+			<%if current_user %> 
+					<%if answer.user == current_user || User.posts[current_user.post]>=2 %> 
+						<div class="allbuttonthings">
+							<span id = "button_answer_<%=answer.id%>" style="cursor:pointer"><h1>...</h1></span>	
+							<div class="dropDown" id="drop_answer_<%=answer.id%>" >
+									<ol>
+									 <li><%=link_to "edit",edit_answer_path(id: answer.id),method: :get%></li>
+									 <li><%= link_to "delete",answer_path(id: answer.id),method: :delete,data: {confirm:"Are 		you sure?"}%></li>
+									 </ol>
+							</div>
+						</div>
+					<%end%>
+				<%end%>
+		</div>
+			<script type="text/javascript">
+			function dropDown(){
+				drop = document.getElementById("drop_answer_<%=answer.id%>");
+				console.log(drop.style.display)
+				if (drop.style.display == 'none'|| drop.style.display == ''){
+					drop.style.display = 'block'
+				}
+				else{
+					drop.style.display = 'none'
+				}
+			
+			}
+			button = document.getElementById("button_answer_<%=answer.id%>");
+			button.addEventListener('click',dropDown);
+			</script>
+		<span id="content"><%=answer.content%> </span>
+		<br><br>
+<% if current_user != nil%>
+
+		<%= link_to 'Upvote', url_for(controller: 'upvoteas', action: 'upvoteToggleAnswer', answer: answer.id), method: :post,id: "upvote_answer_#{answer.id}", remote: true, class: answer.classStringAnswer(current_user.id)%>   <span id="upcount_answer_<%=answer.id%>"><%= answer.upvoteas.count %></span>
+
+		<%= link_to 'Downvote', url_for(controller: 'downvoteas', action: 'downvoteToggleAnswer', answer: answer.id), method: :post,id: "downvote_answer_#{answer.id}",remote: true, class: answer.classStringAnswerDownvote(current_user.id) %>   <span id="downcount_answer_<%=answer.id%>"><%= answer.downvoteas.count %></span>
+		<%end%>
+		<br><br>
+<% if current_user != nil%>
+		<div id="createComment">
+			<%@comment=Comment.new%>
+				 <%= form_for @comment, remote: true do |f|%>
+					 <%= f.label :comment %> <br>
+					 <%= f.text_area :content,id:  "comment_content_#{answer.id}"%>  <br>
+				  	 <%= f.hidden_field :answer_id, :value => answer.id %>
+					 <%=f.hidden_field :user_id, :value => current_user.id %>
+					 <%= f.submit value:"Comment" ,id:  'create-comment-submit'%>
+			 	 <%end%>
+		</div>
+<%end%>
+		<% comments = Comment.where(answer_id: answer.id).order(created_at: :desc)%>
+			<div id="allComments_<%=answer.id%>" class="allComments">
+				 <%  comments.each do |comment| %><br>
+					 <%=render 'comment',answer: answer,comment: comment%>
+				 <%end%>
+			</div>
+
+</div>

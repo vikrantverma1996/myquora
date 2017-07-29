@@ -1,0 +1,79 @@
+	<div class="questionShow">
+			<div>
+			<div class="buttonFlex">
+					asked by <%=question.user.firstName%> <%=question.user.lastName%> 
+					on <%=question.created_at.strftime("%b %d,%y")%>
+						
+				<%if current_user %> 
+					<%if question.user == current_user || User.posts[current_user.post]>=2 %> 
+						<div class="allbuttonthings">
+							<span id = "button_question_<%=question.id%>" style="cursor:pointer"><h1>...</h1></span>	
+						<div class="dropDown" id="drop_question_<%=question.id%>" >
+							<ol>
+							 <li><%=link_to "edit",edit_question_path(id: question.id),method: :get%></li>
+							 <li><%= link_to "delete",question_path(id: question.id),method: :delete,data: {confirm:"Are 		you sure?"}%></li>
+							 </ol>
+						 </div>
+						</div>
+					<%end%>
+				<%end%>
+			</div>
+			<script type="text/javascript">
+			function dropDown(){
+				drop = document.getElementById("drop_question_<%=question.id%>");
+				console.log(drop.style.display)
+				if (drop.style.display == 'none'|| drop.style.display == ''){
+					drop.style.display = 'block'
+				}
+				else{
+					drop.style.display = 'none'
+				}
+			
+			}
+			button = document.getElementById("button_question_<%=question.id%>");
+			button.addEventListener('click',dropDown);
+			</script>
+
+
+
+
+
+			<h1><b><%=question.content%></b></h1>
+			</div>
+			
+<%if current_user%>
+			<br>
+
+			<%= link_to 'Upvote', url_for(controller: 'upvoteqs', action: 'upvoteToggle', question: question.id), method: :post,id: "upvote_question_#{question.id}", remote: true, class: question.classStringQuestion(current_user.id) %>   <span id="upcount_question_<%=question.id%>"><%= question.upvoteqs.count %></span>
+
+			<%= link_to 'Downvote', url_for(controller: 'downvoteqs', action: 'downvoteToggle', question: question.id), method: :post,id: "downvote_question_#{question.id}",remote: true, class: question.classStringQuestionDownVote(current_user.id) %>   <span id="downcount_question_<%=question.id%>"><%= question.downvoteqs.count %></span>
+
+			<br><br>
+<%end%>
+<% if current_user != nil%>
+
+			<div id="createAnswer">
+			<%@answer=Answer.new%>
+				 <%= form_for @answer, remote: true do |f|%>
+					 <%= f.label :Answer %> <br>
+					 <%= f.text_area :content,id:  "answer_content_#{question.id}"%>  <br>
+				  	 <%= f.hidden_field :question_id, :value => question.id %>
+					 <%=f.hidden_field :user_id, :value => current_user.id %>
+					 <%= f.submit value:"Answer" ,id:  'create-answer-submit'%>
+			 	 <%end%>
+			</div>
+<%end%>
+			<% answers = Answer.where(question_id: question.id).order(created_at: :desc)%>
+			<div id="allAnswers_<%=question.id%>" class="allAnswers">
+				 <%  answers.each do |answer| %><br>
+					 <%=render 'answer',question: question,answer: answer%>
+				 <%end%>
+			</div>
+
+
+		</div>
+		<style type="text/css">
+			.fa-ellipsis-h{
+				font-size:20px;
+			}
+		</style>

@@ -1,0 +1,72 @@
+	<div class="commentShow">
+		<div class="commentHeader">
+			<div class="user">
+				<div class="left">
+					<% if comment.user.profile_picture %>
+						<img src="/uploads/<%= comment.user.profile_picture %>" class="profile_image" >
+					<%else%>
+						<img src="/uploads/twitter-default-no-profile-pic.jpg" class="profile_image" >
+					<% end %>
+				</div>
+				<div class = "right">
+					commented by <%=comment.user.firstName%> <%=comment.user.lastName%>
+					on <%=comment.created_at.strftime("%b %d,%y")%>
+				</div>
+			</div>
+
+			<%if current_user %> 
+					<%if comment.user == current_user || User.posts[current_user.post]>=2 %> 
+						<div class="allbuttonthings">
+							<span id = "button_comment_<%=comment.id%>" style="cursor:pointer"><h1>...</h1></span>	
+							<div class="dropDown" id="drop_comment_<%=comment.id%>" >
+									<ol>
+									 <li><%=link_to "edit",edit_comment_path(id: comment.id),method: :get%></li>
+									 <li><%= link_to "delete",comment_path(id: comment.id),method: :delete,data: {confirm:"Are 		you sure?"}%></li>
+									 </ol>
+							</div>
+						</div>
+					<%end%>
+				<%end%>
+		</div>
+			<script type="text/javascript">
+			function dropDown(){
+				drop = document.getElementById("drop_comment_<%=comment.id%>");
+				console.log(drop.style.display)
+				if (drop.style.display == 'none'|| drop.style.display == ''){
+					drop.style.display = 'block'
+				}
+				else{
+					drop.style.display = 'none'
+				}
+			
+			}
+			button = document.getElementById("button_comment_<%=comment.id%>");
+			button.addEventListener('click',dropDown);
+			</script>
+		<%=comment.content%> 
+		<br><br>
+<% if current_user != nil%>
+		<%= link_to 'Upvote', url_for(controller: 'upvotecs', action: 'upvoteToggleComment', comment: comment.id), method: :post,id: "upvote_comment_#{comment.id}", remote: true, class: comment.classStringComment(current_user.id)%>   <span id="upcount_comment_<%=comment.id%>"><%= comment.upvotecs.count %></span>
+
+		<%= link_to 'Downvote', url_for(controller: 'downvotecs', action: 'downvoteToggleComment', comment: comment.id), method: :post,id: "downvote_comment_#{comment.id}",remote: true, class: comment.classStringCommentDownvote(current_user.id) %>   <span id="downcount_comment_<%=comment.id%>"><%= comment.downvotecs.count %></span>
+<%end%>
+		<br><br>
+<% if current_user != nil%>
+		<div id="createReply">
+			<%@reply=Reply.new%>
+				 <%= form_for @reply, remote: true do |f|%>
+					 <%= f.label :reply %> <br>
+					 <%= f.text_area :content,id:  "reply_content_#{comment.id}"%>  <br>
+				  	 <%= f.hidden_field :comment_id, :value => comment.id %>
+					 <%=f.hidden_field :user_id, :value => current_user.id %>
+					 <%= f.submit value:"Reply" ,id:  'create-reply-submit'%>
+			 	 <%end%>
+		</div>
+<%end%>
+		<% replies = Reply.where(comment_id: comment.id).order(created_at: :desc)%>
+			<div id="allReplies_<%=comment.id%>" class="allReplies">
+				 <%  replies.each do |reply| %><br>
+					 <%=render 'reply',reply: reply,reply: reply%>
+				 <%end%>
+			</div>
+</div>
